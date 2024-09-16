@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"time"
+
 	"golang.org/x/crypto/blake2b"
 
 	"fmt"
@@ -123,7 +125,8 @@ func ValidateUri(input interface{}, expectType ...string) error {
 
 func GetAddressByKey(input DidVerificationKey) (CordAddress, error) {
 	if input.Type == "ed25519" || input.Type == "sr25519" {
-		return EncodeAddress(input.PublicKey, Ss58Format)
+		return EncodeAddress(input.PublicKey, Ss58Format), nil
+
 	}
 
 	var address []byte
@@ -133,7 +136,7 @@ func GetAddressByKey(input DidVerificationKey) (CordAddress, error) {
 	} else {
 		address = input.PublicKey
 	}
-	return EncodeAddress(address, Ss58Format)
+	return EncodeAddress(address, Ss58Format), nil
 }
 
 func GetDidUri(didOrAddress string) (DidUri, error) {
@@ -162,4 +165,30 @@ func IsCordAddress(address string) bool {
 	} else {
 		return false
 	}
+}
+
+
+func ConvertUnixTimeToDateTime(unixTime float64, timeZone string) string {
+	location, err := time.LoadLocation(timeZone)
+	if err != nil {
+		panic(err)
+	}
+
+	date := time.Unix(int64(unixTime), 0).In(location)
+
+	formattedDate := date.Format("2006-January-02 15:04:05 MST")
+
+	return formattedDate
+}
+
+func ConvertDateTimeToUnixTime(dateTimeStr string) int64 {
+	layout := "2006-January-02 15:04:05 MST"
+	date, err := time.Parse(layout, dateTimeStr)
+	if err != nil {
+		panic(err)
+	}
+
+	unixTime := date.Unix()
+
+	return unixTime
 }

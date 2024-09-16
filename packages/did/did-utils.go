@@ -7,15 +7,15 @@ import (
 	"strconv"
 
 	utils "github.com/dhiway/cord.go/packages/utils/src"
-	"golang.org/x/crypto/blake2b"
+	"github.com/kartikaysaxena/substrateinterface/signature"
 )
 
 // Constants
 const DID_LATEST_VERSION = 1
 
 var (
-	ss58Format        = 42
-	CORD_DID_REGEX    = regexp.MustCompile(`^did:cord:(?P<address>3[1-9a-km-zA-HJ-NP-Z]{47})(?P<fragment>#[^#\n]+)?$`)
+	ss58Format            = 42
+	CORD_DID_REGEX        = regexp.MustCompile(`^did:cord:(?P<address>3[1-9a-km-zA-HJ-NP-Z]{47})(?P<fragment>#[^#\n]+)?$`)
 	InvalidDidFormatError = fmt.Errorf("Invalid DID format")
 	DidError              = fmt.Errorf("DID Error")
 )
@@ -108,19 +108,8 @@ func ValidateUri(input interface{}, expectType ...string) error {
 	}
 }
 
-func GetAddressByKey(key DidVerificationKey) (utils.CordAddress, error) {
-	if key.Type == "ed25519" || key.Type == "sr25519" {
-		return utils.EncodeAddress(key.PublicKey, utils.Ss58Format)
-	}
-
-	var address []byte
-	if len(key.PublicKey) > 32 {
-		hash := blake2b.Sum256(key.PublicKey)
-		address = hash[:]
-	} else {
-		address = key.PublicKey
-	}
-	return utils.EncodeAddress(address, ss58Format)
+func GetAddressByKey(key signature.KeyringPair) utils.CordAddress {
+	return utils.EncodeAddress(key.PublicKey, utils.Ss58Format)
 }
 
 func GetDidUri(didOrAddress string) (DidUri, error) {
@@ -134,10 +123,7 @@ func GetDidUri(didOrAddress string) (DidUri, error) {
 	return DidUri(fmt.Sprintf("did:cord:%s", parsed["address"])), nil
 }
 
-func GetDidUriFromKey(key DidVerificationKey) (DidUri, error) {
-	address, err := GetAddressByKey(key)
-	if err != nil {
-		return "", err
-	}
+func GetDidUriFromKey(key signature.KeyringPair) (DidUri, error) {
+	address := GetAddressByKey(key)
 	return GetDidUri(string(address))
 }

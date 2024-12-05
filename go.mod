@@ -8,15 +8,6 @@ require (
 )
 
 require (
-	github.com/davecgh/go-spew v1.1.1 // indirect
-	github.com/kartikaysaxena/substrateinterface v1.1.2 // indirect
-	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/stretchr/objx v0.1.1 // indirect
-	github.com/stretchr/testify v1.7.2 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
-)
-
-require (
 	github.com/ChainSafe/go-schnorrkel v1.0.0 // indirect
 	github.com/centrifuge/go-substrate-rpc-client v2.0.0+incompatible
 	github.com/cosmos/go-bip39 v1.0.0
@@ -33,7 +24,7 @@ require (
 	github.com/pierrec/xxHash v0.1.5 // indirect
 	github.com/rs/cors v1.8.2 // indirect
 	github.com/vedhavyas/go-subkey/v2 v2.0.0 // indirect
-	golang.org/x/crypto v0.7.0
-	golang.org/x/sys v0.6.0 // indirect
+	golang.org/x/crypto v0.17.0
+	golang.org/x/sys v0.15.0 // indirect
 	gopkg.in/natefinch/npipe.v2 v2.0.0-20160621034901-c1b8fa8bdcce // indirect
 )
